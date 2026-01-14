@@ -484,23 +484,23 @@ if (isset($_GET['action'])) {
     exit;
 }
 
-<!-- =============== HTML INTERFACE =============== -->
+// =============== HTML INTERFACE ===============
 ?>
-<! DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iTM - Temperature Monitoring</title>
+    <title>iDRAC Temperature Monitor</title>
     <style>
-        : root {
+        :root {
             --bg-primary: #0f172a;
             --bg-secondary: #1e293b;
             --bg-card: #334155;
             --text-primary: #f1f5f9;
             --text-secondary: #cbd5e1;
             --text-muted: #94a3b8;
-            --border:  #475569;
+            --border: #475569;
             --accent: #3b82f6;
             --success: #10b981;
             --warning: #f59e0b;
@@ -510,13 +510,13 @@ if (isset($_GET['action'])) {
         
         * {
             margin: 0;
-            padding:  0;
+            padding: 0;
             box-sizing: border-box;
         }
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background:  var(--bg-primary);
+            background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
@@ -532,40 +532,22 @@ if (isset($_GET['action'])) {
         }
         
         /* Header */
-        . header {
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 30px;
+            padding: 20px;
             background: var(--bg-secondary);
             border-radius: 16px;
             border: 1px solid var(--border);
         }
         
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        
-        .logo-space {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--accent), #60a5fa);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size:  20px;
-            flex-shrink: 0;
-        }
-        
         .header h1 {
-            font-size: 28px;
-            font-weight:  700;
-            color: var(--text-primary);
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         
         .refresh-indicator {
@@ -586,13 +568,13 @@ if (isset($_GET['action'])) {
         
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity:  0.5; }
+            50% { opacity: 0.5; }
         }
         
         /* Main Grid */
         .dashboard-grid {
             display: grid;
-            grid-template-columns:  1fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
             height: calc(100vh - 200px);
         }
@@ -616,57 +598,31 @@ if (isset($_GET['action'])) {
             justify-content: center;
         }
         
-        .temp-label {
-            font-size: 13px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-        
         .temp-display {
             font-size: 72px;
-            font-weight:  800;
+            font-weight: 800;
             margin: 20px 0;
-            line-height: 1;
-            transition: color 0.3s ease;
-        }
-        
-        /* Temperature color based on status */
-        .temp-display. normal {
-            color: var(--success);
-        }
-        
-        .temp-display.warning {
-            color: var(--warning);
-        }
-        
-        . temp-display.critical {
-            color: var(--critical);
-        }
-        
-        .temp-display.unknown {
             color: var(--text-primary);
+            line-height: 1;
         }
         
         .status {
             display: inline-block;
             padding: 10px 28px;
-            border-radius:  24px;
+            border-radius: 24px;
             font-weight: 600;
             font-size: 14px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
-            margin:  10px 0;
+            margin: 10px 0;
         }
         
         .normal { background: var(--success); color: white; }
         .warning { background: var(--warning); color: white; }
-        . critical { background: var(--critical); color: white; }
+        .critical { background: var(--critical); color: white; }
         .unknown { background: var(--unknown); color: white; }
         
-        . meta {
+        .meta {
             color: var(--text-muted);
             font-size: 14px;
             margin-top: 8px;
@@ -678,7 +634,7 @@ if (isset($_GET['action'])) {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
-            margin-top:  30px;
+            margin-top: 30px;
             width: 100%;
         }
         
@@ -686,20 +642,20 @@ if (isset($_GET['action'])) {
             background: var(--bg-secondary);
             padding: 20px;
             border-radius: 12px;
-            text-align:  center;
+            text-align: center;
             border: 1px solid var(--border);
         }
         
         .stat-value {
-            font-size:  24px;
-            font-weight:  700;
+            font-size: 24px;
+            font-weight: 700;
             color: var(--text-primary);
         }
         
         .stat-label {
             color: var(--text-muted);
             font-size: 12px;
-            margin-top:  4px;
+            margin-top: 4px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -714,20 +670,11 @@ if (isset($_GET['action'])) {
             flex-direction: column;
         }
         
-        .controls-title {
-            font-size: 13px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-        
-        . controls-grid {
-            display:  grid;
+        .controls-grid {
+            display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            margin:  20px 0;
+            margin: 20px 0;
         }
         
         @media (max-width: 640px) {
@@ -740,8 +687,8 @@ if (isset($_GET['action'])) {
             padding: 18px;
             border: none;
             border-radius: 12px;
-            font-size:  15px;
-            font-weight:  600;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
@@ -758,59 +705,62 @@ if (isset($_GET['action'])) {
             background: var(--accent);
             transform: translateY(-2px);
             border-color: var(--accent);
-            color: white;
         }
         
-        . btn-primary { background: var(--accent); border-color: var(--accent); color: white; }
-        .btn-success { background: var(--success); border-color: var(--success); color: white; }
-        .btn-warning { background: var(--warning); border-color: var(--warning); color: white; }
-        .btn-danger { background: var(--critical); border-color: var(--critical); color: white; }
+        .btn-primary { background: var(--accent); border-color: var(--accent); }
+        .btn-success { background: var(--success); border-color: var(--success); }
+        .btn-warning { background: var(--warning); border-color: var(--warning); }
+        .btn-danger { background: var(--critical); border-color: var(--critical); }
         
         /* Thresholds */
         .thresholds {
             margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-        }
-        
-        .thresholds-title {
-            font-size: 13px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            margin-bottom:  15px;
         }
         
         .threshold-list {
             display: flex;
             gap: 10px;
-            flex-wrap:  wrap;
+            flex-wrap: wrap;
         }
         
         .threshold-item {
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 12px;
-            font-weight:  600;
+            font-weight: 600;
         }
         
         .threshold-normal { background: var(--success); color: white; }
-        . threshold-warning { background: var(--warning); color: white; }
+        .threshold-warning { background: var(--warning); color: white; }
         .threshold-critical { background: var(--critical); color: white; }
         
-        /* Config Item */
+        /* Config Panel */
+        .config-panel {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .config-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         .config-item {
             padding: 15px;
             background: var(--bg-secondary);
             border-radius: 12px;
             border: 1px solid var(--border);
-            margin-top: 15px;
         }
         
         .config-item h3 {
-            font-size:  13px;
-            color:  var(--text-muted);
+            font-size: 13px;
+            color: var(--text-muted);
             margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -825,8 +775,8 @@ if (isset($_GET['action'])) {
         /* Notification */
         .notification {
             position: fixed;
-            top:  20px;
-            right:  20px;
+            top: 20px;
+            right: 20px;
             padding: 16px 24px;
             border-radius: 12px;
             background: var(--bg-card);
@@ -836,10 +786,10 @@ if (isset($_GET['action'])) {
             animation: slideIn 0.3s ease;
             border-left: 4px solid var(--success);
             max-width: 300px;
-            border:  1px solid var(--border);
+            border: 1px solid var(--border);
         }
         
-        . notification.error {
+        .notification.error {
             border-left-color: var(--critical);
         }
         
@@ -868,7 +818,7 @@ if (isset($_GET['action'])) {
         }
         
         @keyframes spin {
-            0% { transform:  rotate(0deg); }
+            0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
         
@@ -889,7 +839,7 @@ if (isset($_GET['action'])) {
         }
         
         .status-dot.online { background: var(--success); }
-        .status-dot. offline { background: var(--critical); }
+        .status-dot.offline { background: var(--critical); }
         .status-dot.pending { background: var(--warning); }
     </style>
 </head>
@@ -897,13 +847,13 @@ if (isset($_GET['action'])) {
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="header-left">
-                <div class="logo-space">LOGO</div>
-                <h1>iTM</h1>
-            </div>
+            <h1>
+                <span style="font-size: 28px;"></span>
+                iTM
+            </h1>
             <div class="refresh-indicator">
                 <div class="refresh-dot"></div>
-                Auto-refresh: <? php echo (int)$CONFIG['check_interval']; ? > minutes
+                Auto-refresh: <?php echo (int)$CONFIG['check_interval']; ?> minutes
             </div>
         </div>
 
@@ -911,14 +861,16 @@ if (isset($_GET['action'])) {
         <div class="dashboard-grid">
             <!-- Temperature Display -->
             <div class="temp-card">
-                <div class="temp-label">Current Temperature</div>
-                <div class="temp-display unknown" id="temperature">-- °C</div>
+                <div style="font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">
+                    Current Temperature
+                </div>
+                <div class="temp-display" id="temperature">-- °C</div>
                 <div class="status unknown" id="statusIndicator">UNKNOWN</div>
                 <div id="lastUpdate" class="meta">Last updated: --</div>
                 
                 <div class="system-status">
                     <div class="status-dot online"></div>
-                    <span>System:  Online</span>
+                    <span>System: Online</span>
                 </div>
                 
                 <div class="stats">
@@ -939,9 +891,18 @@ if (isset($_GET['action'])) {
 
             <!-- Controls -->
             <div class="controls-card">
-                <div class="controls-title">Actions & Configuration</div>
+                <div style="font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">
+                    <!-- Actions -->
+                    <div class="config-item">
+                        <h3>Email Server</h3>
+                        <p><?php echo htmlspecialchars($CONFIG['smtp_host']); ?>:<?php echo htmlspecialchars($CONFIG['smtp_port']); ?></p>
+                        <p style="margin-top: 8px; font-size: 12px; color: <?php echo $CONFIG['smtp_auth'] ? 'var(--success)' : 'var(--warning)'; ?>">
+                            <?php echo $CONFIG['smtp_auth'] ? '🔐 Authentication Enabled' : '🔓 Internal Relay'; ?>
+                        </p>
+                    </div>
+                </div>
                 
-                <div class="controls-grid">
+                <!-- <div class="controls-grid">
                     <button class="btn-success" onclick="sendReport()">
                         <span>📧</span>
                         Send Report
@@ -950,29 +911,19 @@ if (isset($_GET['action'])) {
                         <span>🧪</span>
                         Test Email
                     </button>
-                    <button class="btn-primary" onclick="getTemperature()">
-                        <span>🔄</span>
-                        Refresh Now
-                    </button>
                     <button class="btn-danger" onclick="downloadLogs()">
                         <span>📥</span>
                         Download Logs
                     </button>
                 </div>
-
-                <div class="config-item">
-                    <h3>Email Server</h3>
-                    <p><? php echo htmlspecialchars($CONFIG['smtp_host']); ?>: <?php echo htmlspecialchars($CONFIG['smtp_port']); ?></p>
-                    <p style="margin-top: 8px; font-size: 12px; color: <? php echo $CONFIG['smtp_auth'] ? 'var(--success)' : 'var(--warning)'; ?>">
-                        <? php echo $CONFIG['smtp_auth'] ? '🔐 Authentication Enabled' : '🔓 Internal Relay'; ?>
-                    </p>
-                </div>
-                
-                <div class="thresholds">
-                    <div class="thresholds-title">Temperature Thresholds</div>
+                 -->
+                <!-- <div class="thresholds">
+                    <div style="font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;">
+                        Temperature Thresholds
+                    </div>
                     <div class="threshold-list">
                         <span class="threshold-item threshold-normal">
-                            Normal &lt; <? php echo $CONFIG['warning_temp']; ?>°C
+                            Normal &lt; <?php echo $CONFIG['warning_temp']; ?>°C
                         </span>
                         <span class="threshold-item threshold-warning">
                             Warning ≥ <?php echo $CONFIG['warning_temp']; ?>°C
@@ -981,12 +932,35 @@ if (isset($_GET['action'])) {
                             Critical ≥ <?php echo $CONFIG['critical_temp']; ?>°C
                         </span>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
+
+        <!-- Configuration Panel -->
+        <!--<div class="config-panel">
+            <!-- <div class="config-item">
+                <h3>Email Server</h3>
+                <p><?php echo htmlspecialchars($CONFIG['smtp_host']); ?>:<?php echo htmlspecialchars($CONFIG['smtp_port']); ?></p>
+                <p style="margin-top: 8px; font-size: 12px; color: <?php echo $CONFIG['smtp_auth'] ? 'var(--success)' : 'var(--warning)'; ?>">
+                    <?php echo $CONFIG['smtp_auth'] ? '🔐 Authentication Enabled' : '🔓 Internal Relay'; ?>
+                </p>
+            </div> -->
+            
+            <!-- <div class="config-item">
+                <h3>Recipients</h3>
+                <p>From: <?php echo htmlspecialchars($CONFIG['email_from']); ?></p>
+                <p>To: 4 recipients configured</p>
+            </div> -->
+            
+            <!-- <div class="config-item">
+                <h3>Monitoring Schedule</h3>
+                <p>📅 Hourly: 00:00–23:00</p>
+                <p>⚠️ Alerts: Instant + 5-min follow-up</p>
+            </div> -->
+       <!-- </div>
     </div>
 
-    <!-- Notification -->
+     Notification -->
     <div class="notification" id="notification"></div>
     
     <!-- Loading -->
@@ -995,29 +969,19 @@ if (isset($_GET['action'])) {
     </div>
 
     <script>
-        const AUTO_REFRESH_MS = <?php echo (int)$CONFIG['check_interval']; ? > * 60000;
+        const AUTO_REFRESH_MS = <?php echo (int)$CONFIG['check_interval']; ?> * 60000;
 
         async function getTemperature() {
             showLoading(true);
             try {
-                const response = await fetch('? action=get_temp');
+                const response = await fetch('?action=get_temp');
                 const data = await response.json();
 
                 if (data.success) {
-                    const status = data.status. toLowerCase();
-                    
-                    // Update temperature display with color based on status
-                    const tempEl = document.getElementById('temperature');
-                    tempEl.textContent = data.temperature + ' °C';
-                    
-                    // Remove all status classes and add the new one
-                    tempEl.className = 'temp-display ' + status;
-                    
-                    // Update status indicator
+                    document.getElementById('temperature').textContent = data.temperature + ' °C';
                     const statusEl = document.getElementById('statusIndicator');
                     statusEl.textContent = data.status;
-                    statusEl.className = 'status ' + status;
-                    
+                    statusEl.className = 'status ' + data.status.toLowerCase();
                     document.getElementById('lastUpdate').textContent = 'Last updated: ' + (data.timestamp || '');
                     showNotification(data.temperature + '°C - ' + data.status, 'success');
                     updateStats(data.temperature);
@@ -1034,7 +998,7 @@ if (isset($_GET['action'])) {
             showLoading(true);
             try {
                 const response = await fetch('?action=send_report');
-                const data = await response. json();
+                const data = await response.json();
                 showNotification(data.message, data.success ? 'success' : 'error');
             } catch (error) {
                 showNotification('Network error: ' + error.message, 'error');
@@ -1045,9 +1009,9 @@ if (isset($_GET['action'])) {
         async function sendTestEmail() {
             showLoading(true);
             try {
-                const response = await fetch('? action=test_email');
+                const response = await fetch('?action=test_email');
                 const data = await response.json();
-                showNotification(data.message, data.success ? 'success' :  'error');
+                showNotification(data.message, data.success ? 'success' : 'error');
             } catch (error) {
                 showNotification('Network error: ' + error.message, 'error');
             }
@@ -1059,7 +1023,7 @@ if (isset($_GET['action'])) {
         }
 
         function updateStats(currentTemp) {
-            if (currentTemp && ! isNaN(currentTemp)) {
+            if (currentTemp && !isNaN(currentTemp)) {
                 const temp = parseFloat(currentTemp);
                 document.getElementById('minTemp').textContent = (temp - 1).toFixed(1) + '°C';
                 document.getElementById('avgTemp').textContent = temp.toFixed(1) + '°C';
@@ -1080,7 +1044,7 @@ if (isset($_GET['action'])) {
         }
 
         function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' :  'none';
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
         }
 
         // Auto-load on start
@@ -1089,13 +1053,15 @@ if (isset($_GET['action'])) {
             setInterval(getTemperature, AUTO_REFRESH_MS);
         };
 
+                
         /**
-         * Parse a temperature string like "26.3 °C", "26°C", "26 C", or "-- °C". 
+         * Parse a temperature string like "26.3 °C", "26°C", "26 C", or "-- °C".
          * Returns a number (e.g., 26.3) or null if not parseable.
          */
         function parseTempFromElement(el) {
             if (!el) return null;
             const txt = el.textContent.trim();
+            // Extract the first valid number (handles negative and decimals)
             const match = txt.match(/-?\d+(\.\d+)?/);
             if (!match) return null;
             const val = parseFloat(match[0]);
@@ -1108,20 +1074,20 @@ if (isset($_GET['action'])) {
         async function sendTempToLog(temp) {
             const payload = { temp };
             try {
-                const res = await fetch('./api/log_temp. php', {
-                    method:  'POST',
-                    headers: { 'Content-Type':  'application/json' },
-                    cache: 'no-store',
-                    body: JSON.stringify(payload)
-                });
-                const json = await res.json();
-                if (! json.ok) {
-                    console.warn('Logging failed:', json);
-                } else {
-                    console.log('Logged temp:', temp, 'at', json.timestamp);
-                }
+            const res = await fetch('./api/log_temp.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                cache: 'no-store',
+                body: JSON.stringify(payload)
+            });
+            const json = await res.json();
+            if (!json.ok) {
+                console.warn('Logging failed:', json);
+            } else {
+                console.log('Logged temp:', temp, 'at', json.timestamp);
+            }
             } catch (err) {
-                console.error('Failed to send temp to log:', err);
+            console.error('Failed to send temp to log:', err);
             }
         }
 
@@ -1134,22 +1100,27 @@ if (isset($_GET['action'])) {
             let temp = parseTempFromElement(el);
 
             if (temp === null) {
-                let retries = 30;
-                while (retries-- > 0 && temp === null) {
-                    await new Promise(r => setTimeout(r, 500));
-                    temp = parseTempFromElement(el);
-                }
+            // Retry up to ~15 seconds in case another script populates it later
+            let retries = 30;
+            while (retries-- > 0 && temp === null) {
+                await new Promise(r => setTimeout(r, 500));
+                temp = parseTempFromElement(el);
+            }
             }
 
             if (temp !== null) {
-                await sendTempToLog(temp);
+            await sendTempToLog(temp);
             } else {
-                console.warn('Temperature not available in #temperature element; skipped logging');
+            console.warn('Temperature not available in #temperature element; skipped logging');
             }
         }
 
+        // Log once the DOM is ready
         document.addEventListener('DOMContentLoaded', logCurrentTempOnce);
+
+        // Auto-refresh every  minutes (180,000 ms)
         setInterval(() => location.reload(), 1000000);
+
     </script>
 </body>
 </html>
